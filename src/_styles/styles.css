@@ -5,12 +5,17 @@
   --invert: 0;
 }
 
+html.ceiling {
+  background-color: rgb(255, 127, 0);
+}
+
 html {
-  height: 100vh;
+  height: -webkit-fill-available;
+
   width: 100vw;
 
-  background: rgb(0, 255, 0);
-  background: linear-gradient(
+  background-color: rgba(0, 127, 255, 1);
+  background-image: linear-gradient(
     var(--background-angle),
     rgba(0, 255, 0, 1) 0%,
     rgba(0, 255, 95, 1) 50%,
@@ -33,6 +38,9 @@ html {
 }
 
 body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+
   font-family: 'Tourney', sans-serif;
 }
 
@@ -68,7 +76,7 @@ h1 {
 }
 
 body {
-  margin: 2rem;
+  margin: 0 2rem;
   display: flex;
   flex-direction: column;
   height: 100%;

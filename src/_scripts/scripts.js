@@ -79,3 +79,14 @@ function update(x, y) {
 
   root.style.setProperty('--shadow-offset', `${shadowOffset}px`);
 }
+
+window.addEventListener('wheel', (e) => {
+  const { deltaY } = e;
+
+  const isCeiling = document.documentElement.classList.contains('ceiling');
+  if (deltaY < 0 && !isCeiling) {
+    document.documentElement.classList.toggle('ceiling');
+  } else if (deltaY > 0 && isCeiling) {
+    document.documentElement.classList.remove('ceiling');
+  }
+});
