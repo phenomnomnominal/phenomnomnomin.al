@@ -1,0 +1,17 @@
+{
+  "name": "phenomnomnomin.al",
+  "version": "1.0.0",
+  "description": "Craig Spence personal website",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx @11ty/eleventy --serve",
+    "build": "npx @11ty/eleventy"
+  },
+  "keywords": [],
+  "author": "Craig Spence",
+  "license": "MIT",
+  "devDependencies": {
+    "@11ty/eleventy": "^1.0.2",
+    "@11ty/eleventy-plugin-inclusive-language": "^1.0.3"
+  }
+}

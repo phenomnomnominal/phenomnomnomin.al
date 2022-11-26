@@ -1,0 +1,87 @@
+:root {
+  --background-angle: 125deg;
+  --shadow-offset: -4px;
+  --font-weight: 900;
+  --invert: 0;
+}
+
+html {
+  height: 100vh;
+  width: 100vw;
+
+  background: rgb(0, 255, 0);
+  background: linear-gradient(
+    var(--background-angle),
+    rgba(0, 255, 0, 1) 0%,
+    rgba(0, 255, 95, 1) 50%,
+    rgba(0, 95, 255, 1) 50%,
+    rgba(0, 0, 255, 1) 100%
+  );
+
+  filter: invert(var(--invert));
+
+  min-width: 320px;
+
+  cursor: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' style='font-size: 48px'><text y='40'>🦄</text></svg>"),
+    auto;
+}
+
+::selection {
+  background: #ff0000;
+  color: #ffffff;
+  text-shadow: var(--shadow-offset) var(--shadow-offset) 0 #000000;
+}
+
+body {
+  font-family: 'Tourney', sans-serif;
+}
+
+body {
+  font-size: 8px;
+}
+
+@media screen and (min-width: 360px) {
+  body {
+    font-size: 10px;
+  }
+}
+
+@media screen and (min-width: 660px) {
+  body {
+    font-size: 12px;
+  }
+}
+
+@media screen and (min-width: 790px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+h1 {
+  text-align: center;
+  font-size: 10em;
+  text-shadow: var(--shadow-offset) var(--shadow-offset) 0px #ffff00;
+  color: #ff00ff;
+
+  font-variation-settings: 'wght' var(--font-weight);
+}
+
+body {
+  margin: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+main {
+  flex-grow: 1;
+}
+
+header {
+  display: flex;
+  height: 100vh;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
