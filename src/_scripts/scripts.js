@@ -27,8 +27,10 @@ const state = {
   previous: [0, 0],
   current: [0, 0],
   target: [300, 300],
-  start: Date.now(),
+  start: null,
 };
+
+update(0, 0);
 
 window.addEventListener('load', () => {
   mediaQuery.addEventListener('change', setAnimate);
@@ -91,13 +93,13 @@ function lerp(x, y, a) {
 function update(x, y) {
   const { innerWidth, innerHeight } = window;
 
-  const centerOffsetX = x - innerWidth / 2;
-  const centerOffsetY = y - innerHeight / 2;
-  const angle = Math.atan(centerOffsetY / centerOffsetX);
-
   const invert = y > innerHeight / 2;
 
   root.style.setProperty('--invert', invert ? 1 : 0);
+
+  const centerOffsetX = x - innerWidth / 2;
+  const centerOffsetY = y - innerHeight / 2;
+  const angle = Math.atan(centerOffsetY / centerOffsetX);
 
   root.style.setProperty(
     '--background-angle',
