@@ -3,22 +3,34 @@
   --shadow-offset: -4px;
   --font-weight: 900;
   --invert: 0;
+
+  --overscroll-primary: rgba(255, 127, 0, 1);
+  --overscroll-secondary: rgba(255, 127, 0, 1);
+
+  --background-primary-start: rgba(0, 255, 0, 1);
+  --background-primary-end: rgba(0, 255, 95, 1);
+  --background-secondary-start: rgba(0, 95, 255, 1);
+  --background-secondary-end: rgba(0, 0, 255, 1);
+
+  --selection-primary: rgba(255, 0, 0, 1);
+  --selection-text: rgba(255, 255, 255, 1);
+  --selection-shadow: rgba(0, 0, 0, 1);
 }
 
 html.ceiling {
-  background-color: rgb(255, 127, 0);
+  background-color: var(--overscroll-primary);
 }
 
 html {
   width: 100vw;
 
-  background-color: rgba(0, 127, 255, 1);
+  background-color: var(--overscroll-secondary);
   background-image: linear-gradient(
     var(--background-angle),
-    rgba(0, 255, 0, 1) 0%,
-    rgba(0, 255, 95, 1) 50%,
-    rgba(0, 95, 255, 1) 50%,
-    rgba(0, 0, 255, 1) 100%
+    var(--background-primary-start) 0%,
+    var(--background-primary-end) 50%,
+    var(--background-secondary-start) 50%,
+    var(--background-secondary-end) 100%
   );
 
   filter: invert(var(--invert));
@@ -30,9 +42,10 @@ html {
 }
 
 ::selection {
-  background: #ff0000;
-  color: #ffffff;
-  text-shadow: var(--shadow-offset) var(--shadow-offset) 0 #000000;
+  background: var(--selection-primary);
+  color: var(--selection-text);
+  text-shadow: var(--shadow-offset) var(--shadow-offset) 0
+    var(--selection-shadow);
 }
 
 body {
@@ -89,4 +102,9 @@ header {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+}
+
+canvas {
+  width: 64px;
+  height: 64px;
 }

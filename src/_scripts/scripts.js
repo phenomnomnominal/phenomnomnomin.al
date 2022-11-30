@@ -3,6 +3,22 @@ const root = document.querySelector(':root');
 
 const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+const MAX_WEIGHT = 900;
+const MAX_SHADOW = 30;
+
+const CANVAS_SIZE = 64;
+const canvas = document.createElement('canvas');
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
+document.body.appendChild(canvas);
+const context = canvas.getContext('2d');
+
+const link = document.createElement('link');
+link.type = 'image/x-icon';
+link.rel = 'shortcut icon';
+const head = document.querySelector('head');
+head.appendChild(link);
+
 const state = {
   animate: !mediaQuery.matches,
 
@@ -63,21 +79,54 @@ function update(x, y) {
 
   const centerOffsetX = x - innerWidth / 2;
   const centerOffsetY = y - innerHeight / 2;
-  const angle = (Math.atan(centerOffsetY / centerOffsetX) * 360) / Math.PI - 90;
+  const angle = Math.atan(centerOffsetY / centerOffsetX);
 
   const invert = y > innerHeight / 2;
 
   root.style.setProperty('--invert', invert ? 1 : 0);
 
-  root.style.setProperty('--background-angle', `${angle}deg`);
+  root.style.setProperty(
+    '--background-angle',
+    `${(angle / (2 * Math.PI)) * 360}deg`
+  );
 
-  const weight = (y / innerHeight) * 900;
+  const weight = (y / innerHeight) * MAX_WEIGHT;
 
   root.style.setProperty('--font-weight', `${weight}`);
 
-  const shadowOffset = (x / innerWidth) * 20 - 10;
+  const shadowOffset = (x / innerWidth) * MAX_SHADOW - MAX_SHADOW / 2;
 
   root.style.setProperty('--shadow-offset', `${shadowOffset}px`);
+
+  const x2 = Math.abs(CANVAS_SIZE * Math.cos(angle));
+  const y2 = Math.abs(CANVAS_SIZE * Math.sin(angle));
+  const gradient = context.createLinearGradient(0, 0, x2, y2);
+
+  const computed = getComputedStyle(root);
+  gradient.addColorStop(
+    0,
+    computed.getPropertyValue('--background-primary-start')
+  );
+  gradient.addColorStop(
+    0.5,
+    computed.getPropertyValue('--background-primary-end')
+  );
+  gradient.addColorStop(
+    0.5,
+    computed.getPropertyValue('--background-secondary-start')
+  );
+  gradient.addColorStop(
+    1,
+    computed.getPropertyValue('--background-secondary-end')
+  );
+
+  context.filter = `invert(${computed.getPropertyValue('--invert')})`;
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+  link.href = canvas.toDataURL('image/x-icon');
+
+  context.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
 
 window.addEventListener('wheel', (e) => {
