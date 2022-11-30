@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Tourney:wght@100..900&display=swap&text=Hi%2CI%27mCrag');
+@import url('https://fonts.googleapis.com/css2?family=Tourney:wght@100..900&display=swap&text=Hi%27MCRAIG');
 
 :root {
   --background-angle: 125deg;
@@ -7,7 +7,7 @@
   --invert: 0;
 
   --overscroll-primary: rgba(255, 127, 0, 1);
-  --overscroll-secondary: rgba(255, 127, 0, 1);
+  --overscroll-secondary: rgba(0, 127, 255, 1);
 
   --background-primary-start: rgba(0, 255, 0, 1);
   --background-primary-end: rgba(0, 255, 95, 1);
