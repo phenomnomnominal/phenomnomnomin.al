@@ -30,7 +30,7 @@ const state = {
   start: Date.now(),
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
   mediaQuery.addEventListener('change', setAnimate);
 
   document.addEventListener('click', setTarget);
