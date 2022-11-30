@@ -6,6 +6,8 @@ const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 const MAX_WEIGHT = 900;
 const MAX_SHADOW = 30;
 
+const TRANSITION_TIME = 2000;
+
 const CANVAS_SIZE = 64;
 const canvas = document.createElement('canvas');
 canvas.width = CANVAS_SIZE;
@@ -25,7 +27,7 @@ const state = {
   previous: [0, 0],
   current: [0, 0],
   target: [300, 300],
-  step: 0,
+  start: Date.now(),
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,29 +45,35 @@ function setAnimate() {
   state.animate = !this.matches;
 }
 
-function setTarget() {
+function setTarget(event) {
   if (!state.animate) {
     return;
   }
 
-  state.step = 0;
-  state.previous = state.current;
+  if (!state.start) {
+    state.start = Date.now();
+    state.previous = state.current;
+  }
+
   state.target = [event.clientX, event.clientY];
 }
 
 function render() {
-  const { step } = state;
+  const { start } = state;
 
-  if (step <= 1) {
+  if (start) {
     const [previousX, previousY] = state.previous;
     const [targetX, targetY] = state.target;
 
-    const nextStep = step + 0.005;
-    const lerpX = lerp(previousX, targetX, easeInOut(nextStep));
-    const lerpY = lerp(previousY, targetY, easeInOut(nextStep));
+    const delta = (Date.now() - start) / TRANSITION_TIME;
+    if (delta >= 1) {
+      state.start = null;
+    }
+
+    const lerpX = lerp(previousX, targetX, easeInOut(delta));
+    const lerpY = lerp(previousY, targetY, easeInOut(delta));
     update(lerpX, lerpY);
 
-    state.step = nextStep;
     state.current = [lerpX, lerpY];
   }
 
