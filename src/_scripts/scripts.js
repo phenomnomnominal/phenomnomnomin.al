@@ -98,26 +98,28 @@ function update(x, y) {
 
   root.style.setProperty('--shadow-offset', `${shadowOffset}px`);
 
-  const x2 = Math.abs(CANVAS_SIZE * Math.cos(angle));
-  const y2 = Math.abs(CANVAS_SIZE * Math.sin(angle));
-  const gradient = context.createLinearGradient(0, 0, x2, y2);
+  const topX = CANVAS_SIZE / 2 + Math.cos(-Math.PI / 2 + angle) * CANVAS_SIZE;
+  const topY = CANVAS_SIZE / 2 + Math.sin(-Math.PI / 2 + angle) * CANVAS_SIZE;
+  const bottomX = CANVAS_SIZE / 2 + Math.cos(Math.PI / 2 + angle) * CANVAS_SIZE;
+  const bottomY = CANVAS_SIZE / 2 + Math.sin(Math.PI / 2 + angle) * CANVAS_SIZE;
+  const gradient = context.createLinearGradient(topX, topY, bottomX, bottomY);
 
   const computed = getComputedStyle(root);
   gradient.addColorStop(
     0,
-    computed.getPropertyValue('--background-primary-start')
-  );
-  gradient.addColorStop(
-    0.5,
-    computed.getPropertyValue('--background-primary-end')
-  );
-  gradient.addColorStop(
-    0.5,
     computed.getPropertyValue('--background-secondary-start')
   );
   gradient.addColorStop(
-    1,
+    0.5,
     computed.getPropertyValue('--background-secondary-end')
+  );
+  gradient.addColorStop(
+    0.5,
+    computed.getPropertyValue('--background-primary-start')
+  );
+  gradient.addColorStop(
+    1,
+    computed.getPropertyValue('--background-primary-end')
   );
 
   context.filter = `invert(${computed.getPropertyValue('--invert')})`;
