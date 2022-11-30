@@ -28,12 +28,20 @@ const state = {
   step: 0,
 };
 
-mediaQuery.addEventListener('change', () => {
-  state.animate = !mediaQuery.matches;
+document.addEventListener('DOMContentLoaded', () => {
+  mediaQuery.addEventListener('change', setAnimate);
+
+  document.addEventListener('click', setTarget);
+  document.addEventListener('mousemove', setTarget);
+
+  window.addEventListener('wheel', setCeiling);
+
+  requestAnimationFrame(render);
 });
 
-document.addEventListener('click', setTarget);
-document.addEventListener('mousemove', setTarget);
+function setAnimate() {
+  state.animate = !this.matches;
+}
 
 function setTarget() {
   if (!state.animate) {
@@ -44,8 +52,6 @@ function setTarget() {
   state.previous = state.current;
   state.target = [event.clientX, event.clientY];
 }
-
-requestAnimationFrame(render);
 
 function render() {
   const { step } = state;
@@ -131,8 +137,8 @@ function update(x, y) {
   context.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
 
-window.addEventListener('wheel', (e) => {
-  const { deltaY } = e;
+function setCeiling(event) {
+  const { deltaY } = event;
 
   const isCeiling = document.documentElement.classList.contains('ceiling');
   if (deltaY < 0 && !isCeiling) {
@@ -140,4 +146,4 @@ window.addEventListener('wheel', (e) => {
   } else if (deltaY > 0 && isCeiling) {
     document.documentElement.classList.remove('ceiling');
   }
-});
+}
