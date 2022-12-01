@@ -1,13 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Tourney:wght@100..900&display=swap&text=Hi%2CI%27mCrag');
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch:wght@400&display=swap&text=IMAKEWBST');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 :root {
-  --overscroll-primary: rgba(255, 127, 0, 1);
-  --overscroll-secondary: rgba(0, 127, 255, 1);
+  --overscroll-primary: hsl(30deg 100% 50%);
+  --overscroll-secondary: hsl(210deg 100% 50%);
 
-  --background-primary-start: rgba(0, 255, 0, 1);
-  --background-primary-end: rgba(0, 255, 95, 1);
-  --background-secondary-start: rgba(0, 95, 255, 1);
-  --background-secondary-end: rgba(0, 0, 255, 1);
+  --header-primary-start: hsl(120deg 100% 50%);
+  --header-primary-end: hsl(140deg 100% 50%);
+  --header-secondary-start: hsl(220deg 100% 50%);
+  --header-secondary-end: hsl(240deg 100% 50%);
+
+  --main-primary-start: hsl(200deg 100% 50%);
+  --main-primary-end: hsl(220deg 100% 50%);
+  --main-secondary-start: hsl(300deg 100% 50%);
+  --main-secondary-end: hsl(320deg 100% 50%);
 
   --selection-primary: rgba(255, 0, 0, 1);
   --selection-text: rgba(255, 255, 255, 1);
@@ -19,40 +31,20 @@ html.ceiling {
 }
 
 html {
-  /* overscroll-behavior: none; */
+  min-width: 320px;
   width: 100vw;
 
   background-color: var(--overscroll-secondary);
-  background-image: linear-gradient(
-    var(--background-angle),
-    var(--background-primary-start) 0%,
-    var(--background-primary-end) 50%,
-    var(--background-secondary-start) 50%,
-    var(--background-secondary-end) 100%
-  );
-
-  filter: invert(var(--invert));
-
-  min-width: 320px;
 
   cursor: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' style='font-size: 48px'><text y='40'>🦄</text></svg>"),
     auto;
 }
 
-::selection {
-  background: var(--selection-primary);
-  color: var(--selection-text);
-  text-shadow: var(--shadow-offset) var(--shadow-offset) 0
-    var(--selection-shadow);
-}
-
 body {
   min-height: 100vh;
+  overflow-x: hidden;
 
   font-family: 'Tourney', sans-serif;
-}
-
-body {
   font-size: 8px;
 }
 
@@ -83,26 +75,65 @@ h1 {
   font-variation-settings: 'wght' var(--font-weight);
 }
 
-body {
-  margin: 0 2rem;
+header {
+  position: sticky;
+  top: 0;
+
   display: flex;
-  flex-direction: column;
-  height: 100%;
+  justify-content: center;
+  align-items: center;
+
+  z-index: -1;
+  height: 100vh;
+
+  background-image: linear-gradient(
+    var(--header-angle),
+    var(--header-primary-start) 0%,
+    var(--header-primary-end) 50%,
+    var(--header-secondary-start) 50%,
+    var(--header-secondary-end) 100%
+  );
+
+  filter: invert(var(--invert));
+}
+
+header ::selection {
+  background: var(--selection-primary);
+  color: var(--selection-text);
+  text-shadow: var(--shadow-offset) var(--shadow-offset) 0
+    var(--selection-shadow);
 }
 
 main {
-  flex-grow: 1;
-}
-
-header {
   display: flex;
-  height: 100vh;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
+
+  z-index: 1;
+  height: 100vh;
+
+  background-image: conic-gradient(
+    var(--main-primary-start),
+    var(--main-primary-end),
+    var(--main-secondary-start),
+    var(--main-secondary-end)
+  );
+
+  color: hsl(120deg 100% 50%);
+  text-align: center;
+  font-family: 'Rubik Glitch';
+  font-size: 8em;
+  text-transform: uppercase;
+
+  cursor: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' style='font-size: 48px'><text y='40'>🖕</text></svg>"),
+    auto;
 }
 
-canvas {
-  width: 64px;
-  height: 64px;
+main p {
+  text-shadow: var(--shadow-offset) var(--shadow-offset) 0px black;
+  transform: rotate(var(--main-angle));
+}
+
+main ::selection {
+  background: black;
 }

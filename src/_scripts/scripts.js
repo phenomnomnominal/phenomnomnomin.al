@@ -1,3 +1,4 @@
+const html = document.documentElement;
 const body = document.querySelector('body');
 const root = document.querySelector(':root');
 
@@ -12,7 +13,6 @@ const CANVAS_SIZE = 64;
 const canvas = document.createElement('canvas');
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
-document.body.appendChild(canvas);
 const context = canvas.getContext('2d');
 
 const link = document.createElement('link');
@@ -61,7 +61,7 @@ function setAnimate() {
 
 function setCeiling() {
   const { scrollY } = window;
-  document.documentElement.classList.toggle('ceiling', scrollY <= 0);
+  html.classList.toggle('ceiling', scrollY <= 0);
 }
 
 function setTarget(x, y) {
@@ -74,7 +74,7 @@ function setTarget(x, y) {
     state.previous = state.current;
   }
 
-  state.target = [x, y];
+  state.target = [Math.round(x * 100) / 100, Math.round(y * 100) / 100];
 }
 
 function setTargetFromMouse(event) {
@@ -120,10 +120,10 @@ function update(x, y) {
 
   const angle = Math.atan(x != 0 ? y / x : 0);
 
-  root.style.setProperty(
-    '--background-angle',
-    `${(angle / (2 * Math.PI)) * 360}deg`
-  );
+  const headerAngle = (angle / (2 * Math.PI)) * 360;
+  root.style.setProperty('--header-angle', `${headerAngle}deg`);
+  const mainAngle = (angle / (2 * Math.PI)) * 360 + 60;
+  root.style.setProperty('--main-angle', `${mainAngle}deg`);
 
   const weight = (y + 0.5) * MAX_WEIGHT;
 
@@ -142,20 +142,17 @@ function update(x, y) {
   const computed = getComputedStyle(root);
   gradient.addColorStop(
     0,
-    computed.getPropertyValue('--background-secondary-start')
+    computed.getPropertyValue('--header-secondary-start')
   );
   gradient.addColorStop(
     0.5,
-    computed.getPropertyValue('--background-secondary-end')
+    computed.getPropertyValue('--header-secondary-end')
   );
   gradient.addColorStop(
     0.5,
-    computed.getPropertyValue('--background-primary-start')
+    computed.getPropertyValue('--header-primary-start')
   );
-  gradient.addColorStop(
-    1,
-    computed.getPropertyValue('--background-primary-end')
-  );
+  gradient.addColorStop(1, computed.getPropertyValue('--header-primary-end'));
 
   context.filter = `invert(${computed.getPropertyValue('--invert')})`;
   context.fillStyle = gradient;
