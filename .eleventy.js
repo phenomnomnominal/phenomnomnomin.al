@@ -12,6 +12,10 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addPlugin(inclusiveLangPlugin);
 
+  eleventyConfig.browserSyncConfig = {
+    https: true,
+  };
+
   return {
     dir: {
       input: 'src',

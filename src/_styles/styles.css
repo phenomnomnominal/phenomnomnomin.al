@@ -19,6 +19,7 @@ html.ceiling {
 }
 
 html {
+  /* overscroll-behavior: none; */
   width: 100vw;
 
   background-color: var(--overscroll-secondary);

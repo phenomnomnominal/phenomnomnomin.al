@@ -30,24 +30,41 @@ const state = {
   start: null,
 };
 
-update(0, 0);
+update(-0.5, -0.5);
 
 window.addEventListener('load', () => {
   mediaQuery.addEventListener('change', setAnimate);
+  window.addEventListener('scroll', setCeiling);
 
-  document.addEventListener('click', setTarget);
-  document.addEventListener('mousemove', setTarget);
-
-  window.addEventListener('wheel', setCeiling);
+  document.addEventListener('click', initBackground, {
+    once: true,
+  });
 
   requestAnimationFrame(render);
 });
+
+async function initBackground() {
+  if (isFunction(DeviceOrientationEvent.requestPermission)) {
+    const permissionState = await DeviceOrientationEvent.requestPermission();
+    if (permissionState === 'granted') {
+      window.addEventListener('deviceorientation', setTargetFromOrientation);
+      return;
+    }
+  }
+
+  document.addEventListener('mousemove', setTargetFromMouse);
+}
 
 function setAnimate() {
   state.animate = !this.matches;
 }
 
-function setTarget(event) {
+function setCeiling() {
+  const { scrollY } = window;
+  document.documentElement.classList.toggle('ceiling', scrollY <= 0);
+}
+
+function setTarget(x, y) {
   if (!state.animate) {
     return;
   }
@@ -57,7 +74,21 @@ function setTarget(event) {
     state.previous = state.current;
   }
 
-  state.target = [event.clientX, event.clientY];
+  state.target = [x, y];
+}
+
+function setTargetFromMouse(event) {
+  const { innerWidth, innerHeight } = window;
+  const centerOffsetX = event.clientX - innerWidth / 2;
+  const centerOffsetY = event.clientY - innerHeight / 2;
+  setTarget(centerOffsetX / innerWidth, centerOffsetY / innerHeight);
+}
+
+function setTargetFromOrientation(event) {
+  const { beta, gamma } = event;
+
+  const cappedBeta = Math.max(Math.min(beta, 90), -90);
+  setTarget(gamma / 90, cappedBeta / 90);
 }
 
 function render() {
@@ -82,35 +113,23 @@ function render() {
   requestAnimationFrame(render);
 }
 
-function easeInOut(t) {
-  return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-}
-
-function lerp(x, y, a) {
-  return x * (1 - a) + y * a;
-}
-
 function update(x, y) {
-  const { innerWidth, innerHeight } = window;
-
-  const invert = y > innerHeight / 2;
+  const invert = y > 0;
 
   root.style.setProperty('--invert', invert ? 1 : 0);
 
-  const centerOffsetX = x - innerWidth / 2;
-  const centerOffsetY = y - innerHeight / 2;
-  const angle = Math.atan(centerOffsetY / centerOffsetX);
+  const angle = Math.atan(x != 0 ? y / x : 0);
 
   root.style.setProperty(
     '--background-angle',
     `${(angle / (2 * Math.PI)) * 360}deg`
   );
 
-  const weight = (y / innerHeight) * MAX_WEIGHT;
+  const weight = (y + 0.5) * MAX_WEIGHT;
 
   root.style.setProperty('--font-weight', `${weight}`);
 
-  const shadowOffset = (x / innerWidth) * MAX_SHADOW - MAX_SHADOW / 2;
+  const shadowOffset = (x + 0.5) * MAX_SHADOW - MAX_SHADOW / 2;
 
   root.style.setProperty('--shadow-offset', `${shadowOffset}px`);
 
@@ -147,13 +166,14 @@ function update(x, y) {
   context.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
 
-function setCeiling(event) {
-  const { deltaY } = event;
+function easeInOut(t) {
+  return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+}
 
-  const isCeiling = document.documentElement.classList.contains('ceiling');
-  if (deltaY < 0 && !isCeiling) {
-    document.documentElement.classList.toggle('ceiling');
-  } else if (deltaY > 0 && isCeiling) {
-    document.documentElement.classList.remove('ceiling');
-  }
+function lerp(x, y, a) {
+  return x * (1 - a) + y * a;
+}
+
+function isFunction(func) {
+  return typeof func === 'function';
 }
