@@ -30,8 +30,6 @@ const state = {
   start: null,
 };
 
-update(-0.5, -0.5);
-
 window.addEventListener('load', () => {
   mediaQuery.addEventListener('change', setAnimate);
   window.addEventListener('scroll', setCeiling);
@@ -40,7 +38,9 @@ window.addEventListener('load', () => {
     once: true,
   });
 
-  requestAnimationFrame(render);
+  render(-0.5, -0.5);
+
+  requestAnimationFrame(update);
 });
 
 async function initBackground() {
@@ -91,7 +91,7 @@ function setTargetFromOrientation(event) {
   setTarget(gamma / 90, cappedBeta / 90);
 }
 
-function render() {
+function update() {
   const { start } = state;
 
   if (start) {
@@ -105,15 +105,15 @@ function render() {
 
     const lerpX = lerp(previousX, targetX, easeInOut(delta));
     const lerpY = lerp(previousY, targetY, easeInOut(delta));
-    update(lerpX, lerpY);
+    render(lerpX, lerpY);
 
     state.current = [lerpX, lerpY];
   }
 
-  requestAnimationFrame(render);
+  requestAnimationFrame(update);
 }
 
-function update(x, y) {
+function render(x, y) {
   const invert = y > 0;
 
   root.style.setProperty('--invert', invert ? 1 : 0);
@@ -139,28 +139,31 @@ function update(x, y) {
   const bottomY = CANVAS_SIZE / 2 + Math.sin(Math.PI / 2 + angle) * CANVAS_SIZE;
   const gradient = context.createLinearGradient(topX, topY, bottomX, bottomY);
 
-  const computed = getComputedStyle(root);
-  gradient.addColorStop(
-    0,
-    computed.getPropertyValue('--header-secondary-start')
-  );
-  gradient.addColorStop(
-    0.5,
-    computed.getPropertyValue('--header-secondary-end')
-  );
-  gradient.addColorStop(
-    0.5,
-    computed.getPropertyValue('--header-primary-start')
-  );
-  gradient.addColorStop(1, computed.getPropertyValue('--header-primary-end'));
+  const [primaryStart, primaryEnd, secondaryStart, secondaryEnd] =
+    getGradientColours();
+  gradient.addColorStop(0, primaryStart);
+  gradient.addColorStop(0.5, primaryEnd);
+  gradient.addColorStop(0.5, secondaryStart);
+  gradient.addColorStop(1, secondaryEnd);
 
-  context.filter = `invert(${computed.getPropertyValue('--invert')})`;
+  context.filter = `invert(${invert ? 1 : 0})`;
   context.fillStyle = gradient;
   context.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
   link.href = canvas.toDataURL('image/x-icon');
+}
 
-  context.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+function getGradientColours() {
+  if (!getGradientColours.cached) {
+    const computed = getComputedStyle(root);
+    getGradientColours.cached = [
+      computed.getPropertyValue('--header-secondary-start'),
+      computed.getPropertyValue('--header-secondary-end'),
+      computed.getPropertyValue('--header-primary-start'),
+      computed.getPropertyValue('--header-primary-end'),
+    ];
+  }
+  return getGradientColours.cached;
 }
 
 function easeInOut(t) {
