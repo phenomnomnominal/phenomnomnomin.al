@@ -66,15 +66,6 @@ body {
   }
 }
 
-h1 {
-  text-align: center;
-  font-size: 10em;
-  text-shadow: var(--shadow-offset) var(--shadow-offset) 0px #ffff00;
-  color: #ff00ff;
-
-  font-variation-settings: 'wght' var(--font-weight);
-}
-
 header {
   position: sticky;
   top: 0;
@@ -97,6 +88,17 @@ header {
   filter: invert(var(--invert));
 }
 
+header h1 {
+  text-align: center;
+  font-size: 10em;
+  text-shadow: var(--shadow-offset) var(--shadow-offset) 0px #ffff00;
+  color: #ff00ff;
+
+  font-variation-settings: 'wght' var(--font-weight);
+
+  width: 500px;
+}
+
 header ::selection {
   background: var(--selection-primary);
   color: var(--selection-text);
@@ -110,6 +112,7 @@ main {
   justify-content: center;
 
   z-index: 1;
+
   height: 100vh;
 
   background-image: conic-gradient(
@@ -132,6 +135,8 @@ main {
 main p {
   text-shadow: var(--shadow-offset) var(--shadow-offset) 0px black;
   transform: rotate(var(--main-angle));
+
+  width: 500px;
 }
 
 main ::selection {
